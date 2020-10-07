@@ -34,7 +34,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Descripcion</label>
+                    <label>Descripción</label>
                     <InputText @bind-Value="productos.Descripcion" class="form-control" />
                     <ValidationMessage For=@(() => productos.Descripcion) />
                 </div>
@@ -145,9 +145,11 @@
 
     }
 
-   
-
-
-
+    private void Calculo()
+    {
+        
+        productos.ValorInventario = productos.Existencia * productos.Costo;
+        
+    }
 
 }
