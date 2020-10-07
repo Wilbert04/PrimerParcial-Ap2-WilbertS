@@ -4,6 +4,7 @@ using PrimerParcial_Ap2_WIlbertSmith.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PrimerParcial_Ap2_WIlbertSmith.BLL
@@ -132,6 +133,27 @@ namespace PrimerParcial_Ap2_WIlbertSmith.BLL
             }
 
             return encontrado;
+        }
+
+        public static List<Productos> GetList(Expression<Func<Productos, bool>> expression)
+        {
+            List<Productos> lista = new List<Productos>();
+            Contexto contexto = new Contexto();
+
+            try
+            {
+                lista = contexto.productos.Where(expression).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                contexto.Dispose();
+            }
+            return lista;
         }
     }
 }
