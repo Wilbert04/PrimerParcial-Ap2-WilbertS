@@ -13,7 +13,7 @@ namespace PrimerParcial_Ap2_WIlbertSmith.DAL
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(@"Data Source=DATA\ProductoDB.db");
+            optionsBuilder.UseSqlite(@"Data Source=DATA\Producto1DB.db");
         }
     }
 }
