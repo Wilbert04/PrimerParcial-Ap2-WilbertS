@@ -1,0 +1,153 @@
+﻿@page "/Producto"
+@page "/Producto/{ProductoId:int}"
+
+@using PrimerParcial_Ap2_WIlbertSmith.Models
+@using PrimerParcial_Ap2_WIlbertSmith.BLL
+
+@using Blazored.Toast
+@using Blazored.Toast.Services
+
+@inject IToastService Toast
+
+<EditForm Model="productos" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Registro de Productos</h3>
+        </div>
+
+        <div class="card-body">
+            <form>
+                <div class="form-row align-items-center">
+                    <div class="col">
+                        <div class="form-group">
+                            <label>ProductoID</label>
+                            <div class="input-group">
+                                <InputNumber @bind-Value="productos.ProductoId" class="form-control col-4" />
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">Buscar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Descripcion</label>
+                    <InputText @bind-Value="productos.Descripcion" class="form-control" />
+                    <ValidationMessage For=@(() => productos.Descripcion) />
+                </div>
+
+                <div class="form-group">
+                    <label>Existencia</label>
+                    <InputNumber @bind-Value="productos.Existencia" class="form-control" @oninput="Calculo" @onfocusin="Calculo" @onfocusout="Calculo" />
+                    <ValidationMessage For=@(() => productos.Existencia) />
+                </div>
+
+                <div class="form-group">
+                    <label>Costo</label>
+                    <InputNumber @bind-Value="productos.Costo" class="form-control" @oninput="Calculo" @onfocusin="Calculo" @onfocusout="Calculo" />
+                </div>
+
+                <div class="form-group">
+                    <label>Valor Inventario</label>
+                    <InputNumber @bind-Value="productos.ValorInventario" class="form-control" />
+                </div>
+
+            </form>
+
+            <div class="card-footer">
+                <div class="form-group text-center" display:inline-block>
+                    <button type="button" class="btn btn-primary" @onclick="Nuevo">Nuevo</button>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <button type="button" class="btn btn-danger" @onclick="Eliminar">Eliminar</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</EditForm>
+
+
+@code {
+
+    private Productos productos = new Productos();
+    [Parameter]
+    public int ProductoId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Nuevo();
+        Buscar();
+
+    }
+    
+    private void Nuevo()
+    {
+        productos = new Productos();
+    }
+
+    private void Buscar()
+    {
+
+        if (productos.ProductoId > 0)
+        {
+            var encontrado = ProductoBLL.Buscar(productos.ProductoId);
+
+            if (encontrado != null)
+            {
+                this.productos = encontrado;
+
+            }
+            else
+            {
+                Toast.ShowInfo("No encontrado..");
+                Nuevo();
+            }
+        }
+
+    }
+
+    private void Guardar()
+    {
+        bool guardo;
+        guardo = ProductoBLL.Guardar(productos);
+
+        if (guardo)
+        {
+            Nuevo();
+            Toast.ShowSuccess("Guardado correctamente");
+        }
+        else
+        {
+            Toast.ShowError("No fue posible guardar");
+
+        }
+    }
+
+    private void Eliminar()
+    {
+        bool elimino;
+        elimino = ProductoBLL.Eliminar(productos.ProductoId);
+
+        if (elimino)
+        {
+            Nuevo();
+            Toast.ShowSuccess("Eliminado correctamente");
+        }
+        else
+        {
+            Toast.ShowSuccess("No se pudo eliminar");
+        }
+
+    }
+
+   
+
+
+
+
+}
